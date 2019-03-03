@@ -21,7 +21,7 @@ idDHT11 DHT11(idDHT11pin,idDHT11intNumber,dht11_wrapper);
 BH1750 lightMeter;
 //function declarations
 
-//YL-83 precipitation sensor
+//YL-83 precipitation sensor  *****************
 int sensor_A0 = A0;    // analog pin
 int wartosc_A0;        // zmienna dla wartoĹ›ci A0
 int sensor_D0 = 3; 
@@ -117,6 +117,7 @@ void dht11_initialization()
 void loop() {
 
   lap_number++;
+  Serial.println();
   Serial.print("lap_number  ");
   Serial.println(lap_number);
   Serial.print("Humidity (%): ");
