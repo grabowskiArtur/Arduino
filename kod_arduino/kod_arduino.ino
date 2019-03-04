@@ -14,14 +14,17 @@ dht DHT22;
 
 // BH1750 **************************************
 #include <BH1750.h>
-BH1750 lightMeter;
-//function declarations
+BH1750 lightMeter(0x23);
+// address 0x23
 
 //YL-83 precipitation sensor  *****************
 int sensor_A0 = A0;    // analog pin
 int wartosc_A0;        // zmienna dla wartoĹ›ci A0
 int sensor_D0 = 3; 
 int wartosc_D0; 
+
+// bmp180 
+//address 0x77
 
 //*******************************************
 //***************SETUP***********************
@@ -88,7 +91,6 @@ void loop() {
   Serial.println(lap_number);
 
   //DHT22 data : 
-
   Serial.print("Wilgotnosc (%): ");              //wyświetlenie wartości wilgotności
   Serial.println((float)DHT22.humidity, 2);
   Serial.print("Temperatura (C): ");           //wyświetlenie temperatury
