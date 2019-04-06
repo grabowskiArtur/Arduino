@@ -17,8 +17,12 @@ dht DHT22;
 BH1750 lightMeter(0x23);
 // address 0x23
 
+// JSON **************************************
+#include <ArduinoJson.h>
+StaticJsonDocument<200> doc;
+
 //YL-83 precipitation sensor  *****************
-int sensor_A0 = A0;    // analog pin
+int sensor_A0 = 0;    // analog pin
 int wartosc_A0;        // zmienna dla wartoĹ›ci A0
 int sensor_D0 = 3;
 int wartosc_D0;
@@ -34,7 +38,6 @@ double T, P;
 //***************SETUP***********************
 //*******************************************
 void setup() {
-  Serial1.begin(9600);
   Serial.begin(115200);
   delay(2000);
   check_dht22_status();
