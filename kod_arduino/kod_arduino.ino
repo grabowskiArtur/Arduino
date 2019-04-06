@@ -1,4 +1,4 @@
-// link to libraries : 
+// link to libraries :
 // https://drive.google.com/drive/folders/1x29EhA_QyLCDvwt1uYwJfcXbnrRn8K5H?usp=sharing
 
 //Tools -> serialMonitor tam leci serial print
@@ -7,7 +7,7 @@
 //orange 3,3 V
 //black ground
 //yellow clock
-//green SDA 
+//green SDA
 int lap_number = 0;
 #include <Wire.h>
 
@@ -27,8 +27,8 @@ StaticJsonDocument<200> doc;
 
 //YL-83 precipitation sensor  *****************
 int RainAnalogPin = 0;    // analog pin
-int RainAnalogPinValue;        
-int RainDigitalPin = 3;    //digital pin 
+int RainAnalogPinValue;
+int RainDigitalPin = 3;    //digital pin
 int RainDigitalPinValue;
 
 // bmp180 // 3,3 V always! !!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -51,7 +51,6 @@ void setup() {
   pinMode(RainDigitalPin, INPUT);    // for  precipitation sensor
 
   bmp180_initialization();
-
 }
 //*******************************************
 //***************SETUP END*******************
@@ -60,13 +59,13 @@ void setup() {
 void bmp180_initialization()
 {
   pressure.begin();
-//  if (pressure.begin())
-//    Serial.println("BMP180 init success");
-//  else
-//  {
-//    Serial.println("BMP180 init fail\n\n");
-//    while (1);
-//  }
+  //  if (pressure.begin())
+  //    Serial.println("BMP180 init success");
+  //  else
+  //  {
+  //    Serial.println("BMP180 init fail\n\n");
+  //    while (1);
+  //  }
 }
 
 
@@ -124,27 +123,27 @@ int getPresseure()
         status = pressure.getPressure(P, T);
         if (status != 0)
         {
-          return(P);
-        }         
+          return (P);
+        }
       }
     }
   }
- 
-  
+
+
 }
 
 String rainFunction(int value)
 {
   if (value > 900)
   {
-    return "NO_RAIN";  
+    return "NO_RAIN";
   }
-  else if (value < 900 && value > 600){
-    return "SMALL_RAIN";  
-  }else if (value < 600 && value > 400){
-    return "MEDIUM_RAIN";  
-  }else if (value < 400){
-    return "STRONG_RAIN";  
+  else if (value < 900 && value > 600) {
+    return "SMALL_RAIN";
+  } else if (value < 600 && value > 400) {
+    return "MEDIUM_RAIN";
+  } else if (value < 400) {
+    return "STRONG_RAIN";
   }
   return "ERROR";
 }
@@ -159,9 +158,9 @@ void printInDebugMode()
 
   //DHT22 data :
   DHT22.read(DHT22PIN);
-  Serial.print("Wilgotnosc (%): ");             
+  Serial.print("Wilgotnosc (%): ");
   Serial.println((float)DHT22.humidity, 2);
-  Serial.print("Temperatura (C): ");           
+  Serial.print("Temperatura (C): ");
   Serial.println((float)DHT22.temperature, 2);
 
   // BH 1750 data
@@ -171,11 +170,11 @@ void printInDebugMode()
   Serial.println(" lx");
 
   //Rain sensor data :
-  RainAnalogPinValue = analogRead(RainAnalogPin);      
+  RainAnalogPinValue = analogRead(RainAnalogPin);
   Serial.print("A0: ");
   Serial.println(RainAnalogPinValue);
-  RainDigitalPinValue = digitalRead(RainDigitalPin);     
-  Serial.print("D0: ");                    
+  RainDigitalPinValue = digitalRead(RainDigitalPin);
+  Serial.print("D0: ");
   Serial.println(RainDigitalPinValue);
 
   //bmp180
@@ -223,7 +222,7 @@ void printInDebugMode()
   }
   delay(4000);
 
-  
+
 }
 
 void printInJson()
@@ -231,33 +230,65 @@ void printInJson()
   //DHT22 data :
   DHT22.read(DHT22PIN);
   doc["Humidity"] = DHT22.humidity;
-  doc["Temperature"] = DHT22.temperature;  
+  doc["Temperature"] = DHT22.temperature;
 
   // BH 1750 data
   //uint16_t lux = lightMeter.readLightLevel();
   int lux = lightMeter.readLightLevel();
-  doc["Light"] = lux; 
+  doc["Light"] = lux;
   //String lightString = (String)lux;
-  //lightString += "lx"; 
+  //lightString += "lx";
   //doc["Light"] = lightString;
 
   //Rain sensor data :
   doc["Rain"] = rainFunction(analogRead(RainAnalogPin));
 
-  doc["Pressure"] = getPresseure();  
-  
+  doc["Pressure"] = getPresseure();
+
   //Serial.println();
   serializeJsonPretty(doc, Serial);
+  Serial.println(",");
+  delay(4000);
+  //clear console command
+  //  Serial.write(27);       // ESC command
+  //  Serial.print("[2J");    // clear screen command
+  //  Serial.write(27);
+  //  Serial.print("[H");     // cursor to home command
+}
+
+void printInCSV()
+{
+  //DHT22 data :
+  DHT22.read(DHT22PIN);
+  Serial.print((int)DHT22.humidity);
+  Serial.print(",");
+
+  Serial.print((int)DHT22.temperature);
+  Serial.print(",");
+
+  // BH 1750 data
+  Serial.print(lightMeter.readLightLevel());
+  Serial.print(",");
+
+  //Rain sensor data :
+  Serial.print(rainFunction(analogRead(RainAnalogPin)));
+  Serial.print(",");
+
+  Serial.println(getPresseure());
+
   delay(4000);
 }
+
+
 //*******************************************
 //***************LOOP************************
 //*******************************************
 
 void loop() {
 
-  printInJson();
-  //printInDebugMode(); 
+  printInCSV();
+  //printInJson();
+  //printInDebugMode();
 }
 //*******************************************
 //***************LOOP END********************
