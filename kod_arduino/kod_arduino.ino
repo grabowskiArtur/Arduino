@@ -101,12 +101,9 @@ void bh1750_initialization() {
   Serial.println("11114 ");
 }
 
-//*******************************************
-//***************LOOP************************
-//*******************************************
 
-void loop() {
-
+void printinDebugMode()
+{
   lap_number++;
   Serial.println();
   Serial.print("lap_number  ");
@@ -178,6 +175,35 @@ void loop() {
   }
   delay(4000);
 
+  
+}
+
+void printInJson()
+{
+  //DHT22 data :
+  DHT22.read(DHT22PIN);
+  doc["Humidity"] = DHT22.humidity;
+  doc["Temperature"] = DHT22.temperature;  
+
+  // BH 1750 data
+  uint16_t lux = lightMeter.readLightLevel();
+  String lightString = (String)lux;
+  lightString += "lx"; 
+  doc["Light"] = lightString;
+
+
+  Serial.println();
+  serializeJsonPretty(doc, Serial);
+  delay(4000);
+}
+//*******************************************
+//***************LOOP************************
+//*******************************************
+
+void loop() {
+
+  printInJson();
+  //printinDebugMode(); 
 }
 //*******************************************
 //***************LOOP END********************
