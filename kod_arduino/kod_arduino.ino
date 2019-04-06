@@ -1,3 +1,6 @@
+// link to libraries : 
+// https://drive.google.com/drive/folders/1x29EhA_QyLCDvwt1uYwJfcXbnrRn8K5H?usp=sharing
+
 //Tools -> serialMonitor tam leci serial print
 //kable :
 //czerwony 5 V
